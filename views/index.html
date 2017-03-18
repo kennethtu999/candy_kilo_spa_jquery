@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello World</title>
+    <title>Internet Banking Demo</title>
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -13,55 +13,111 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Welcome.</h1>
-        <div id="nameInput" class="input-group-lg center-block helloInput">
-            <p class="lead">What is your name?</p>
-            <input id="user_name" type="text" class="form-control" placeholder="name" aria-describedby="sizing-addon1" value="" />
-        </div>
-        <p id="response" class="lead text-center"></p>
+    <div id="page_login" class="page container hide">
+        <h1>Internet Banking</h1>
+        <form  role="form" >
+          <div class="form-group">
+            <label for="uid">Identity</label>
+            <input type="text" class="form-control" id="uid" placeholder="Identity" required/>
+          </div>
+          <div class="form-group">
+            <label for="passwd">Password</label>
+            <input type="password" class="form-control" id="passwd" placeholder="Password" required/>
+          </div>
 
-        <p id="databaseNames" class="lead text-center"></p>
+          <button id="page_login_action" type="submit" class="btn btn-primary">Login</button>
+        </form>
     </div>
+
+
+
+    <div id="page_overview" class="page container hide">
+        <h1>Overview</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Balance</th>
+              <th>Do Something</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+    </div>
+
+
+    <div id="page_detail" class="page container hide">
+        <h1>Transfer Detail</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <button id="page_detail_action" type="button" class="btn btn-primary">Back</button>
+    </div>
+
+
+    <!-- Modal -->
+    <div id="page_transfer" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Transfer</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="uid">From</label>
+                <select name="outAccount" class="form-control" required></select>
+              </div>
+              <div class="form-group">
+                <label for="passwd">To</label>
+                <select name="inAccount" class="form-control" required></select>
+              </div>
+              <div class="form-group">
+                <label for="passwd">Amount</label>
+                <input type="number" class="form-control" name="amount" placeholder="Transfer Amount" required/>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Transfer</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="se-pre-con"></div>
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+
+    <script src="dataservice.js"></script>
+    <script src="pageservice.js"></script>
 
     <script>
-    	//Submit data when enter key is pressed
-        $('#user_name').keydown(function(e) {
-        	var name = $('#user_name').val();
-            if (e.which == 13 && name.length > 0) { //catch Enter key
-            	//POST request to API to create a new visitor entry in the database
-                $.ajax({
-				  method: "POST",
-				  url: "./api/visitors",
-				  contentType: "application/json",
-				  data: JSON.stringify({name: name })
-				})
-                .done(function(data) {
-                    $('#response').html(data);
-                    $('#nameInput').hide();
-                    getNames();
-                });
-            }
-        });
 
-        //Retreive all the visitors from the database
-        function getNames(){
-          $.get("./api/visitors")
-              .done(function(data) {
-                  if(data.length > 0) {
-                    $('#databaseNames').html("Database contents: " + JSON.stringify(data));
-                  }
-              });
-          }
-
-          //Call getNames on page load.
-          getNames();
-
-
+      $(function() {
+        pageService.initLoginPage(this);
+      });
     </script>
 </body>
 
